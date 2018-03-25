@@ -1,6 +1,13 @@
-# todoapp
+# TodoApp with MEVN stack
 
-> mevn project
+Front end: Vue js 2, 
+Back end: node js, express js, mongodb
+
+Please read my commit to see what I've done.
+
+Thank you for visiting.
+
+MIT LICENSE
 
 ## Build Setup
 
