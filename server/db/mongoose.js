@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
-const REMOTE_MONGO = 'mongodb://todoapp:todoapp@ds223019.mlab.com:23019/todoapp';
+//const REMOTE_MONGO = 'mongodb://todoapp:todoapp@ds223019.mlab.com:23019/todoapp';
 //heroku config:set MONGODB_URI=mongodb://todoapp:todoapp@ds223019.mlab.com:23019/todoapp
-const LOCAL_MONGO = process.env.MONGODB_URI;
-const MONGO_URI = process.env.PORT ? REMOTE_MONGO : LOCAL_MONGO;
+//const LOCAL_MONGO = process.env.MONGODB_URI;
+//const MONGO_URI = process.env.PORT ? REMOTE_MONGO : LOCAL_MONGO;
+const MONGO_URI = process.env.MONGODB_URI
 
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGO_URI, {
