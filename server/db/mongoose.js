@@ -5,7 +5,7 @@ const LOCAL_MONGO = 'mongodb://localhost:27017/TodoApp';
 const MONGO_URI = process.env.PORT ? REMOTE_MONGO : LOCAL_MONGO;
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoApp', {
+mongoose.connect(MONGO_URI, {
     keepAlive: true,
     reconnectTries: Number.MAX_VALUE,
     useMongoClient: true
