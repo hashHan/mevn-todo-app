@@ -45,6 +45,7 @@ UserSchema.methods.toJSON = function () {
 };
 
 //token
+//generate
 UserSchema.methods.generateAuthToken = function () {
   var user = this;
   var access = 'auth';
@@ -54,6 +55,17 @@ UserSchema.methods.generateAuthToken = function () {
 
   return user.save().then(() => {
     return token;
+  });
+};
+
+//remove
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+
+  return user.update({
+    $pull: {
+      tokens: {token}
+    }
   });
 };
 
