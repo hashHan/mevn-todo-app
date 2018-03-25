@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "test": "mocha test/**/server.test.js",
+    "test": "SET \"NODE_ENV=test\" && mocha --timeout=4000 test/**/server.test.js",
     "test-watch": "nodemon --exec \"npm test\"",
     "start": "node server/server.js"
   },
