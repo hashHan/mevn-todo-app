@@ -21,24 +21,27 @@ const mutations= {
     }
 };
 const actions = {
-    signup ({commit}, authData) { // signup ({commit, dispatch}, authData) {
+    signup ({commit, dispatch}, authData) { // signup ({commit, dispatch}, authData) {
         axios.post('/users', {// to authentication
             email: authData.email,
             password: authData.password
             })
             .then(res => {
-                console.log(res);
-                // commit('authUser', { //to state
-                //     token: res.data.idToken,
-                //     userId: res.data._id,
-                //     email: res.data.email
-                // });
-                // const now = new Date();
-                // const expirationDate = new Date(now.getTime() + res.data.expiresIn * 1000);
-                // localStorage.setItem('token', res.data.idToken);
-                // localStorage.setItem('userId', res.data.localId);
-                // localStorage.setItem('expirationDate', expirationDate);
-                // dispatch('setLogoutTimer', res.data.expiresIn);
+                console.log(res.headers.expiresin);
+                commit('authUser', { //to state
+                    token: res.headers['x-auth'],
+                    userId: res.data._id,
+                    email: res.data.email
+                });
+                const now = new Date();
+                const expiresin = parseInt(res.headers.expiresin);
+                console.log(expiresin);
+                const expirationDate = new Date(now.getTime() + expiresin * 1000);
+                console.log(expirationDate);
+                localStorage.setItem('token', res.headers['x-auth']);
+                localStorage.setItem('userId', res.data._id);
+                localStorage.setItem('expirationDate', expirationDate);
+                dispatch('setLogoutTimer', expiresin);
                 // dispatch('storeUser', authData); // to database
             })
             .catch(function (error) {
@@ -61,6 +64,58 @@ const actions = {
               }
               console.log(error.config);
             });
+    },
+    login ({commit, dispatch}, authData) {
+        axios.post('/users/login', {
+            email: authData.email,
+            password: authData.password
+            })
+            .then(res => {
+                console.log(res.headers.expiresin);
+                commit('authUser', { //to state
+                    token: res.headers['x-auth'],
+                    userId: res.data._id,
+                    email: res.data.email
+                });
+                const now = new Date();
+                const expiresin = parseInt(res.headers.expiresin);
+                console.log(expiresin);
+                const expirationDate = new Date(now.getTime() + expiresin * 1000);
+                console.log(expirationDate);
+                localStorage.setItem('token', res.headers['x-auth']);
+                localStorage.setItem('userId', res.data._id);
+                localStorage.setItem('expirationDate', expirationDate);
+                dispatch('setLogoutTimer', expiresin);
+            })
+            .catch(error => console.log(error));
+    },
+    tryAutoLogin ({commit}) {
+        const token = localStorage.getItem('token')
+        if (!token) {
+          return
+        }
+        const expirationDate = localStorage.getItem('expirationDate')
+        const now = new Date()
+        if (now >= expirationDate) {
+          return
+        }
+        const userId = localStorage.getItem('userId')
+        commit('authUser', {
+          token: token,
+          userId: userId
+        })
+    },
+    setLogoutTimer ({commit}, expirationTime) {
+        setTimeout(() => {
+          commit('clearAuthData')
+        }, expirationTime * 1000)
+    },
+    logout ({commit}) {
+        commit('clearAuthData')
+        localStorage.removeItem('expirationDate')
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+        router.replace('/Signin')
     },
 };
 

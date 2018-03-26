@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 
 //import auth from './store/modules/auth';
 
-import Login from './components/auth/Login.vue';
+import Signin from './components/auth/Signin.vue';
 import Signup from './components/auth/Signup.vue';
 import Home from './components/Home.vue';
 import Main from './components/Main.vue';
@@ -12,7 +12,7 @@ Vue.use(VueRouter)
 
 const routes = [
     { path: '/', name:'home', component: Home },
-    { path: '/login', name:'login', component: Login },
+    { path: '/signin', name:'signin', component: Signin },
     { path: '/signup', name: 'signup', component: Signup },
     { path: '/main', name: 'main', component: Main },
     {path: '*', redirect: '/'}
