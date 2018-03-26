@@ -4,15 +4,17 @@ const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
+const cors = require('cors');
 
-var {mongoose} = require('./db/mongoose');
-var {Todo} = require('./models/todo');
-var {User} = require('./models/user');
-var {authenticate} = require('./middleware/authenticate');
+const {mongoose} = require('./db/mongoose');
+const {Todo} = require('./models/todo');
+const {User} = require('./models/user');
+const {authenticate} = require('./middleware/authenticate');
 
-var app = express();
+const app = express();
 const port = process.env.PORT;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/todos', authenticate, (req, res) => { //each user by authenticate
