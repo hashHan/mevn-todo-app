@@ -27,10 +27,10 @@ const actions = {
             password: authData.password
             })
             .then(res => {
-                console.log(res.data);
+                console.log(res);
                 // commit('authUser', { //to state
                 //     token: res.data.idToken,
-                //     userId: res.data.localId,
+                //     userId: res.data._id,
                 //     email: res.data.email
                 // });
                 // const now = new Date();
@@ -46,16 +46,10 @@ const actions = {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
                 console.log(error.response.data);
-                // if (error.response.data.error.message === 'EMAIL_EXISTS') {
-                //     console.log('The email is already in use.');
-                //     alert('The email is already in use.');
-                // } 
-                
-                // console.log(error.response.data.error.message);
-                // console.log(error.response.data);
-                // console.log(error.response.status);
-                // console.log(error.response.headers);
-
+                if (error.response.data.code === 11000) {
+                    console.log('The email is already in use.');
+                    alert('The email is already in use.');
+                }
               } else if (error.request) {
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of

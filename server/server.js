@@ -14,7 +14,26 @@ const {authenticate} = require('./middleware/authenticate');
 const app = express();
 const port = process.env.PORT;
 
-app.use(cors());
+//cors with response header setting
+
+//cors options
+var whitelist = ['http://localhost:8080', 'https://mysterious-woodland-17947.herokuapp.com/'];
+var corsOptions = {
+  origin: function (origin, callback) {//for origin restriction
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  exposedHeaders: [//allow custom response header 
+    'x-auth'
+  ]
+};
+app.use(cors(corsOptions));
+//app.all('*', cors(corsOptions))
+//app.use(cors());
+
 app.use(bodyParser.json());
 
 app.post('/todos', authenticate, (req, res) => { //each user by authenticate
