@@ -17,7 +17,7 @@ const port = process.env.PORT;
 //cors with response header setting
 
 //cors options
-var whitelist = ['http://localhost:8080', 'https://mysterious-woodland-17947.herokuapp.com/'];
+var whitelist = ['http://localhost:3000','http://localhost:8080', 'https://mysterious-woodland-17947.herokuapp.com/'];
 var corsOptions = {
   origin: function (origin, callback) {//for origin restriction
     if (whitelist.indexOf(origin) !== -1) {

@@ -1,4 +1,5 @@
 import axios from '../../axios-auth' // for authenication
+import router from '../../routes';
 
 const state = {
     idToken: null,
@@ -42,6 +43,7 @@ const actions = {
                 localStorage.setItem('userId', res.data._id);
                 localStorage.setItem('expirationDate', expirationDate);
                 dispatch('setLogoutTimer', expiresin);
+                router.push({path: '/appmain'})
                 // dispatch('storeUser', authData); // to database
             })
             .catch(function (error) {
@@ -86,6 +88,7 @@ const actions = {
                 localStorage.setItem('userId', res.data._id);
                 localStorage.setItem('expirationDate', expirationDate);
                 dispatch('setLogoutTimer', expiresin);
+                router.replace({path: '/appmain'})
             })
             .catch(error => console.log(error));
     },
@@ -115,7 +118,7 @@ const actions = {
         localStorage.removeItem('expirationDate')
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
-        router.replace('/Signin')
+        router.push({path: '/appmain'})
     },
 };
 
