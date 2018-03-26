@@ -2,17 +2,28 @@ import axios from '../../axios-auth'  // for database
 import auth from './auth'// for authentication
 
 const state = {
-    todolist: []
+    todolist: [],
+    edittoggle: false 
 };
 
 const mutations = {
     storetodos (state, todos) { //save to state 
         state.todolist = todos;
         console.log(state.todolist);
+    },
+    storeEditToggle (state) { //save to state 
+        state.edittoggle = !state.edittoggle;
+        console.log(state.edittoggle);
     }
 };
 
 const actions = {
+    //edit toggle
+    changeEditToggle({commit}) {
+        commit('storeEditToggle');
+    },
+
+
     //POST /todos
     posttodo({commit, dispatch}, postdata) {//dispatch: fetch new todolist data
         if (!auth.state.idToken) {// for authenticated writing
@@ -95,6 +106,9 @@ const actions = {
 const getters = {
     gettodolist: state => {
         return state.todolist;
+    },
+    getEdittoggle: state => {
+        return state.edittoggle;
     }
 };
 

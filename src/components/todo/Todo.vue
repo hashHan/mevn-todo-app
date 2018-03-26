@@ -1,129 +1,93 @@
 <template>
     <div id="todo">
+      <div class="row">{{todolist}}</div>
+      <div class="btn btn-primary" @click="newpostclick=!newpostclick">New Post</div>
       <div class="row">
         <div class="col-sm-6">
-            <div class="card" v-if="!editMode">
+            <div class="card" v-for="eachtodo in todolist" :key="eachtodo._id">
                 <div class="card-body">
-                    <h5 class="card-title">{{todoData.text}}</h5>
+                    <h5 class="card-title">{{eachtodo.text}}</h5>
                     <p class="card-text">
-                        <span class="md-body-2" v-if="todoData.completed">Completed at : {{new Date(todoData.completedAt).toUTCString()}} </span>
+                        <span class="md-body-2" v-if="eachtodo.completed">Completed at : {{new Date(eachtodo.completedAt).toUTCString()}} </span>
                     </p>
-                    <div class="btn btn-primary" @click="Edit">Edit</div>
-                    <div class="btn btn-primary" @click="Complete">Complete</div>
-                    <div class="btn btn-primary" @click="Incomplete">Incomplete</div>
-                    <div class="btn btn-primary" @click="Delete">Delete</div>
-                </div>
+                    <div class="btn btn-primary" @click="Completetoggle(eachtodo._id, eachtodo.completed)">
+                      <span v-if="!eachtodo.completed">To Complete</span>
+                      <span v-if="eachtodo.completed">To Incomplete</span>
+                    </div>
+                    <div class="btn btn-primary" @click="Delete(eachtodo._id)">Delete</div>
+                    <div class="btn btn-primary" @click="clickEdit(eachtodo._id)">Edit</div>
+                    <!-- <router-link to="/edit" class="btn btn-primary" :eachtodo="eachtodo">EDIT</router-link> -->
+                </div>     
             </div>
         </div>
         <div class="col-sm-6">
-            <div class="card" v-if="editMode">
+          <div class="row" v-if="editclick">
+            <app-edit :id="id"></app-edit>
+          </div>
+          <div class="row" v-if="newpostclick">
+            <div class="card">
                 <div class="card-body">
                     <div class="card-title input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Edit</span>
+                            <span class="input-group-text" id="inputGroup-sizing-default">Text</span>
                         </div>
-                        <input v-model="todoData.text" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        <input v-model="newtext" type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                     </div>
-                    <p class="card-text">
-                        <span class="md-body-2" v-if="todoData.completed">Completed at : {{new Date(todoData.completedAt).toUTCString()}} </span>
-                    </p>
-                    <div class="btn btn-primary" @click="Edit">Edit</div>
-                    <div class="btn btn-primary" @click="Complete" v-if="!todoData.completed">Complete</div>
-                    <div class="btn btn-primary" @click="Incomplete" v-if="todoData.completed">Incomplete</div>
-                    <div class="btn btn-primary" @click="Delete">Delete</div>
+                    <div class="btn btn-primary" @click="NEWPOST">SEND</div>
                 </div>
             </div>
+          </div>
         </div>
+    
+    
       </div>
     </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
+import Edit from './Edit.vue';
+
 export default {
-  props: ["todoData"],
   name: "todo",
   data() {
     return {
-      completed: false,
-      editMode: false,
-      tempText: this.todoData.text
+        id: '',
+        newpostclick: false,
+        newtext: ''
     };
   },
+  computed: {
+       ...mapGetters({
+            todolist: 'gettodolist', //getter from state
+            editclick:'getEdittoggle'
+       })  
+  },
   methods: {
-    Delete: function() {
-      this.$store.dispatch('delete', formData);      
-
-
-      this.$http
-        .delete(`todos/${this.todoData._id}`, {
-          headers: { "x-auth": this.$cookie.get("x-auth") }
-        })
-        .then(
-          res => {
-            this.$emit("todoDeleted", this.todoData._id);
-          },
-          err => {
-            console.log(err);
-          }
-        );
+    NEWPOST(){
+      console.log(this.newtext);
+      const textObj = {text: this.newtext};
+      this.$store.dispatch('posttodo', textObj);
+      this.newpostclick = !this.newpostclick;
     },
-    Complete: function() {
-      this.$http
-        .patch(
-          `todos/${this.todoData._id}`,
-          { completed: true },
-          {
-            headers: { "x-auth": this.$cookie.get("x-auth") }
-          }
-        )
-        .then(
-          res => {
-            this.$emit("todoCompleted", this.todoData._id);
-          },
-          err => {
-            console.log(err);
-          }
-        );
+    Delete(eachid){
+      console.log(eachid);
+      this.$store.dispatch('deletetodo', eachid);
     },
-    Incomplete: function() {
-      this.$http
-        .patch(
-          `todos/${this.todoData._id}`,
-          { completed: false },
-          {
-            headers: { "x-auth": this.$cookie.get("x-auth") }
-          }
-        )
-        .then(
-          res => {
-            this.$emit("todoIncompleted", this.todoData._id);
-          },
-          err => {
-            console.log(err);
-          }
-        );
+    Completetoggle(eachid, eachcompleted){
+      console.log(eachid, eachcompleted)
+      this.$store.dispatch('patchtodo',{_id: eachid, completed: !eachcompleted}) ;
     },
-    Edit: function() {
-      this.editMode = !this.editMode;
-      if (!this.editMode) {
-        this.$http
-          .patch(
-            `todos/${this.todoData._id}`,
-            { text: this.todoData.text },
-            {
-              headers: { "x-auth": this.$cookie.get("x-auth") }
-            }
-          )
-          .then(
-            res => {
-              this.tempText;
-            },
-            err => {
-              console.log(err);
-            }
-          );
-      }
+    clickEdit(id){
+      this.$store.dispatch('changeEditToggle');
+      this.id = id;
     }
+  },
+  created () {
+      this.$store.dispatch('gettodo') ; // get from db to state
+  },
+  components:{
+    appEdit: Edit
   }
 };
 </script>

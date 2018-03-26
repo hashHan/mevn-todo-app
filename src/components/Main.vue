@@ -1,21 +1,22 @@
 <template>
     <div id="appmain">
         main
-        <app-todolist></app-todolist>
+        <app-todo></app-todo>
     </div>
 </template>
 
 <script>
-import todolist from "./todo/Todolist.vue";
+import todo from './todo/Todo.vue';
+
 export default {
   name: 'appmain',
   data () {
     return {
     }
   },
-  components: {
-    appTodolist : todolist
-  },
+  components:{
+    appTodo: todo
+  }
 
 }
 </script>
