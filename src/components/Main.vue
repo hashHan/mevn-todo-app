@@ -1,6 +1,6 @@
 <template>
     <div id="appmain">
-        main
+        <div class="mb-3 font-weight-bold">Manage your todo list!</div>
         <app-todo></app-todo>
     </div>
 </template>

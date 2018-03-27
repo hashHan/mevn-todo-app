@@ -118,7 +118,7 @@ const actions = {
         localStorage.removeItem('expirationDate')
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
-        router.push({path: '/appmain'})
+        router.push({path: '/'})
     },
 };
 

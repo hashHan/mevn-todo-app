@@ -3,7 +3,9 @@ import auth from './auth'// for authentication
 
 const state = {
     todolist: [],
-    edittoggle: false 
+    edittoggle: false,
+    selectedid: '',
+    selectedtext: ''
 };
 
 const mutations = {
@@ -13,12 +15,21 @@ const mutations = {
     },
     storeEditToggle (state) { //save to state 
         state.edittoggle = !state.edittoggle;
-        console.log(state.edittoggle);
+    },
+    storeselected (state, arg){
+        state.selectedid = arg.id;
+        state.selectedtext = arg.text;
+        console.log(state.selectedid, state.selectedtext );
     }
 };
 
 const actions = {
     //edit toggle
+    changeEditandSelect({commit}, arg) {
+        commit('storeEditToggle');
+        commit('storeselected', arg);
+    },
+
     changeEditToggle({commit}) {
         commit('storeEditToggle');
     },
@@ -109,6 +120,12 @@ const getters = {
     },
     getEdittoggle: state => {
         return state.edittoggle;
+    },
+    getselectedid: state => {
+        return state.selectedid;
+    },
+    getselectedtext: state => {
+        return state.selectedtext;
     }
 };
 
