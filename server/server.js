@@ -1,5 +1,8 @@
 require('./config/config');
 
+const path = require('path');//deployment
+const publicPath = path.join(__dirname, '/../');//deployment. index.html // not ../dist
+
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -17,7 +20,7 @@ const port = process.env.PORT;
 //cors with response header setting
 
 //cors options
-var whitelist = ['http://localhost:3000','http://localhost:8080', 'https://mysterious-woodland-17947.herokuapp.com/'];
+var whitelist = ['localhost:3000','http://localhost:3000','http://localhost:8080', 'https://mysterious-woodland-17947.herokuapp.com/'];
 var corsOptions = {
   origin: function (origin, callback) {//for origin restriction
     if (whitelist.indexOf(origin) !== -1) {
@@ -31,11 +34,18 @@ var corsOptions = {
     'expiresIn'
   ]
 };
+
 app.use(cors(corsOptions));
 //app.all('*', cors(corsOptions))
 //app.use(cors());
 
+app.use(express.static(publicPath));//deployment
+
 app.use(bodyParser.json());
+
+app.get('/', function (req, res) {// link home to front
+  res.sendFile(path.join(__dirname+'index.html'));
+}); 
 
 app.post('/todos', authenticate, (req, res) => { //each user by authenticate
   var todo = new Todo({

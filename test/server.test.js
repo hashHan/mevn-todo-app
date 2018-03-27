@@ -28,7 +28,8 @@ describe('POST /todos', () => {
 
     request(app)
       .post('/todos')
-      .set('x-auth', users[0].tokens[0].token) //for individual pages
+      .set('x-auth', users[0].tokens[0].token)//for individual pages
+      .set('Origin', 'http://localhost:8080') //for cors
       .send({text})
       .expect(200)
       .expect((res) => {
@@ -51,6 +52,7 @@ describe('POST /todos', () => {
     request(app)
       .post('/todos')
       .set('x-auth', users[0].tokens[0].token) //for individual pages
+      .set('Origin', 'http://localhost:8080')
       .send({})
       .expect(400)
       .end((err, res) => {
@@ -72,6 +74,7 @@ describe('GET /todos', () => {
     request(app)
       .get('/todos')
       .set('x-auth', users[0].tokens[0].token) //for individual pages
+      .set('Origin', 'http://localhost:8080')
       .expect(200)
       .expect((res) => {
         expect(res.body.todos.length).toBe(1);
@@ -86,6 +89,7 @@ describe('GET /todos/:id', () => {
     request(app)
       .get(`/todos/${todos[0]._id.toHexString()}`)
       .set('x-auth', users[0].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(200)
       .expect((res) => {
         expect(res.body.todo.text).toBe(todos[0].text);
@@ -97,6 +101,7 @@ describe('GET /todos/:id', () => {
     request(app)
       .get(`/todos/${todos[1]._id.toHexString()}`)
       .set('x-auth', users[0].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(404)
       .end(done);
   });
@@ -107,6 +112,7 @@ describe('GET /todos/:id', () => {
     request(app)
       .get(`/todos/${hexId}`)
       .set('x-auth', users[0].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(404)
       .end(done);
   });
@@ -116,6 +122,7 @@ describe('GET /todos/:id', () => {
     request(app)
       .get('/todos/123abc')
       .set('x-auth', users[0].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(404)
       .end(done);
   });
@@ -129,6 +136,7 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete(`/todos/${hexId}`)
       .set('x-auth', users[1].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(200)
       .expect((res) => {
         expect(res.body.todo._id).toBe(hexId);
@@ -151,6 +159,7 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete(`/todos/${hexId}`)
       .set('x-auth', users[1].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(404)
       .end((err, res) => {
         if (err) {
@@ -170,6 +179,7 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete(`/todos/${hexId}`)
       .set('x-auth', users[1].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(404)
       .end(done);
   });
@@ -178,6 +188,7 @@ describe('DELETE /todos/:id', () => {
     request(app)
       .delete('/todos/123abc')
       .set('x-auth', users[1].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(404)
       .end(done);
   });
@@ -192,6 +203,7 @@ describe('PATCH /todos/:id', () => {
     request(app)
       .patch(`/todos/${hexId}`)
       .set('x-auth', users[0].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .send({
         completed: true,
         text
@@ -212,6 +224,7 @@ describe('PATCH /todos/:id', () => {
     request(app)
       .patch(`/todos/${hexId}`)
       .set('x-auth', users[1].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .send({
         completed: true,
         text
@@ -227,6 +240,7 @@ describe('PATCH /todos/:id', () => {
     request(app)
       .patch(`/todos/${hexId}`)
       .set('x-auth', users[1].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .send({
         completed: false,
         text
@@ -248,6 +262,7 @@ describe('GET /users/me', () => {
     request(app)
       .get('/users/me')
       .set('x-auth', users[0].tokens[0].token)
+      .set('Origin', 'http://localhost:8080')
       .expect(200)
       .expect((res) => {
         expect(res.body._id).toBe(users[0]._id.toHexString());
@@ -259,6 +274,7 @@ describe('GET /users/me', () => {
   it('should return 401 if not authenticated', (done) => {
     request(app)
       .get('/users/me')
+      .set('Origin', 'http://localhost:8080')
       .expect(401)
       .expect((res) => {
         expect(res.body).toEqual({});
@@ -275,6 +291,7 @@ describe('POST /users', () => {
 
     request(app)
       .post('/users')
+      .set('Origin', 'http://localhost:8080')
       .send({email, password})
       .expect(200)
       .expect((res) => {
@@ -298,6 +315,7 @@ describe('POST /users', () => {
   it('should return validation errors if request invalid', (done) => {
     request(app)
       .post('/users')
+      .set('Origin', 'http://localhost:8080')
       .send({
         email: 'and',
         password: '123'
@@ -309,6 +327,7 @@ describe('POST /users', () => {
   it('should not create user if email in use', (done) => {
     request(app)
       .post('/users')
+      .set('Origin', 'http://localhost:8080')
       .send({
         email: users[0].email,
         password: 'Password123!'
@@ -323,6 +342,7 @@ describe('POST /users/login', () => {
   it('should login user and return auth token', (done) => {
     request(app)
       .post('/users/login')
+      .set('Origin', 'http://localhost:8080')
       .send({
         email: users[1].email,
         password: users[1].password
@@ -349,6 +369,7 @@ describe('POST /users/login', () => {
   it('should reject invalid login', (done) => {
     request(app)
       .post('/users/login')
+      .set('Origin', 'http://localhost:8080')
       .send({
         email: users[1].email,
         password: users[1].password + '1'
@@ -375,6 +396,7 @@ describe('DELETE /users/me/token', () => {
   it('should remove auth token on logout', (done) => {
     request(app)
       .delete('/users/me/token')
+      .set('Origin', 'http://localhost:8080')
       .set('x-auth', users[0].tokens[0].token)
       .expect(200)
       .end((err, res) => {
