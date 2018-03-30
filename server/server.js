@@ -87,7 +87,7 @@ app.get('/todos/:id', authenticate, (req, res) => {
 
     res.send({todo});
   }).catch((e) => {
-    res.status(400).send();
+    res.status(400).send(e);
   });
 });
 
@@ -109,7 +109,7 @@ app.delete('/todos/:id', authenticate, (req, res) => {
 
     res.send({todo});
   }).catch((e) => {
-    res.status(400).send();
+    res.status(400).send(e);
   });
 });
 
@@ -152,7 +152,8 @@ app.post('/users', (req, res) => {
   }).then((token) => {
     res.header('x-auth', token).header('expiresin', 3600).send(user);
   }).catch((e) => {
-    res.status(400).send(e);
+    res.statusMessage = "check your login info";
+    res.status(401).end();
   })
 });
 
@@ -165,7 +166,10 @@ app.post('/users/login', (req, res) => {
       res.header('x-auth', token).header('expiresin', 3600).send(user);
     });
   }).catch((e) => {
-    res.status(400).send();
+    res.statusMessage = "check your login info";
+    res.status(401).end();
+    //res.status(400).send(e);
+    // res.status(400).send('check your login info');
   });
 });
 
