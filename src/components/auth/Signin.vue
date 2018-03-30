@@ -25,6 +25,7 @@
         </div>
         <div class="submit">
           <button type="submit" :disabled="$v.$invalid">Submit</button>
+          <router-link to="/signup" class="btn">Go To Sign Up</router-link>
         </div>
       </form>
     </div>
@@ -63,7 +64,7 @@ export default {
     },
     computed: {
       loginemail () {
-        return !this.$store.getters.email ? false : this.$store.getters.email
+        return !this.$store.getters.isAuthenticated ? false : this.$store.getters.email
       }
     }
 }

@@ -34,6 +34,9 @@ export default {
     onLogout() {
       this.$store.dispatch('logout');
     }
+  },
+  created () {
+      this.$store.dispatch('tryAutoLogin')
   }
 }
 </script>

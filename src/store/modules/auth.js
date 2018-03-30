@@ -41,6 +41,7 @@ const actions = {
                 console.log(expirationDate);
                 localStorage.setItem('token', res.headers['x-auth']);
                 localStorage.setItem('userId', res.data._id);
+                localStorage.setItem('email', res.data.email);
                 localStorage.setItem('expirationDate', expirationDate);
                 dispatch('setLogoutTimer', expiresin);
                 router.push({path: '/appmain'})
@@ -81,12 +82,14 @@ const actions = {
                 });
                 const now = new Date();
                 const expiresin = parseInt(res.headers.expiresin);
-                console.log(expiresin);
+                console.log('expiresin: ',expiresin);
                 const expirationDate = new Date(now.getTime() + expiresin * 1000);
-                console.log(expirationDate);
+                console.log('expirationDate: ',expirationDate);
                 localStorage.setItem('token', res.headers['x-auth']);
                 localStorage.setItem('userId', res.data._id);
+                localStorage.setItem('email', res.data.email);
                 localStorage.setItem('expirationDate', expirationDate);
+                console.log( localStorage);
                 dispatch('setLogoutTimer', expiresin);
                 router.replace({path: '/appmain'})
             })
@@ -103,9 +106,11 @@ const actions = {
           return
         }
         const userId = localStorage.getItem('userId')
+        const userEmail = localStorage.getItem('email')
         commit('authUser', {
           token: token,
-          userId: userId
+          userId: userId,
+          email: userEmail
         })
     },
     setLogoutTimer ({commit}, expirationTime) {
@@ -118,6 +123,7 @@ const actions = {
         localStorage.removeItem('expirationDate')
         localStorage.removeItem('token')
         localStorage.removeItem('userId')
+        localStorage.removeItem('email')
         router.push({path: '/'})
     },
 };
